@@ -1,0 +1,31 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+class Ticker {
+  String? high;
+  String? low;
+  String? last;
+
+  Ticker({
+    this.high,
+    this.low,
+    this.last,
+  });
+
+  factory Ticker.fromJson(Map<String, dynamic> json) {
+    return Ticker(
+      high: json['high'],
+      low: json['low'],
+      last: json['last'],
+    );
+  }
+
+  static Future<Ticker> getTicker({required String koinId}) async {
+    var url = "https://indodax.com/api/ticker/$koinId";
+    http.Response response = await http.get(Uri.parse(url));
+    var result = jsonDecode(response.body);
+    Ticker tick = Ticker.fromJson(result['ticker']);
+    return tick;
+  }
+}
