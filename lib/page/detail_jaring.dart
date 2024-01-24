@@ -1,5 +1,5 @@
 import 'package:auto_indo/bloc/jaring_bloc.dart';
-import 'package:auto_indo/komponen/svgicon.dart';
+import 'package:auto_indo/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -38,22 +38,25 @@ class DetailJaring extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  svgicon(url: image),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(name)
-                ],
+              const SizedBox(
+                width: 15,
+              ),
+              Text(
+                name,
+                style: const TextStyle(
+                    color: textBold, fontWeight: FontWeight.bold, fontSize: 20),
               ),
               const SizedBox(
                 height: 15,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [const Text('Id'), Text(id)],
+                children: [
+                  const Text(
+                    'Id',
+                  ),
+                  Text(id)
+                ],
               ),
               const SizedBox(
                 height: 15,
@@ -91,13 +94,28 @@ class DetailJaring extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [const Text('Status'), Text(status)],
+                children: [
+                  const Text('Status'),
+                  Text(
+                    status.toUpperCase(),
+                    style: TextStyle(
+                        color: status == 'buy' ? Colors.green : Colors.red),
+                  )
+                ],
               ),
               const SizedBox(
                 height: 15,
               ),
               Row(
                 children: [
+                  Expanded(
+                    child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Batal',
+                          style: TextStyle(color: textBold),
+                        )),
+                  ),
                   Expanded(
                     child: TextButton(
                       style: TextButton.styleFrom(

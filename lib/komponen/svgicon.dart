@@ -4,10 +4,12 @@ import 'package:shimmer/shimmer.dart';
 
 Widget svgicon({required String url}) {
   final Widget networkSvg = SvgPicture.network(url,
+      width: 70,
+      height: 70,
       semanticsLabel: 'A shark?!',
       placeholderBuilder: (BuildContext context) => SizedBox(
-            height: 30,
-            width: 30,
+            height: 70,
+            width: 70,
             child: Shimmer.fromColors(
               baseColor: Colors.grey.withOpacity(0.2),
               highlightColor: Colors.white.withOpacity(0.5),

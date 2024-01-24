@@ -1,9 +1,11 @@
 import 'package:auto_indo/bloc/jaring_bloc.dart';
 import 'package:auto_indo/bloc/pair_bloc.dart';
+import 'package:auto_indo/constants.dart';
 import 'package:auto_indo/model/pair.dart';
 import 'package:auto_indo/model/ticker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:line_icons/line_icons.dart';
 
 class TambahJaring extends StatefulWidget {
   const TambahJaring({super.key});
@@ -35,13 +37,11 @@ class _TambahJaringState extends State<TambahJaring> {
               child: Text(
                 'Tambah Jaring Baru',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+                    color: textBold, fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Row(
               children: [
@@ -61,6 +61,7 @@ class _TambahJaringState extends State<TambahJaring> {
                                 Expanded(
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
+                                        icon: const Icon(LineIcons.angleDown),
                                         isExpanded: true,
                                         value: idKoin == ''
                                             ? snapshot.data!.first.koinId!
@@ -116,17 +117,22 @@ class _TambahJaringState extends State<TambahJaring> {
                 // ),
               ],
             ),
-            const SizedBox(
-              height: 10,
+            const Divider(
+              color: primaryColor,
             ),
             TextField(
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.all(8),
-                border: OutlineInputBorder(borderSide: BorderSide(width: 1)),
-                hintText: 'Modal',
-              ),
+                  isDense: true,
+                  //contentPadding: EdgeInsets.all(10),
+                  border:
+                      UnderlineInputBorder(borderSide: BorderSide(width: 1)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: primaryColor)),
+                  hintText: 'Modal',
+                  hintStyle: TextStyle(color: textColor),
+                  labelText: 'Modal',
+                  labelStyle: TextStyle(color: primaryColor)),
               controller: modalController,
             ),
             const SizedBox(
@@ -139,10 +145,14 @@ class _TambahJaringState extends State<TambahJaring> {
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       isDense: true,
-                      contentPadding: EdgeInsets.all(8),
-                      border:
-                          OutlineInputBorder(borderSide: BorderSide(width: 1)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(width: 1)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: primaryColor)),
                       hintText: 'Buy',
+                      labelText: 'Buy',
+                      labelStyle: TextStyle(color: primaryColor),
                     ),
                     controller: buyController,
                   ),
@@ -155,10 +165,14 @@ class _TambahJaringState extends State<TambahJaring> {
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       isDense: true,
-                      contentPadding: EdgeInsets.all(8),
-                      border:
-                          OutlineInputBorder(borderSide: BorderSide(width: 1)),
+                      border: UnderlineInputBorder(
+                          borderSide: BorderSide(width: 1)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: primaryColor)),
                       hintText: 'Sell',
+                      labelText: 'Sell',
+                      labelStyle: TextStyle(color: primaryColor),
                     ),
                     controller: sellController,
                   ),
@@ -167,17 +181,18 @@ class _TambahJaringState extends State<TambahJaring> {
             ),
 
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Row(
               children: [
                 Expanded(
                     child: TextButton(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
+                    foregroundColor: textBold,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: const Text('Batal'),
                 )),
                 const SizedBox(
@@ -186,7 +201,7 @@ class _TambahJaringState extends State<TambahJaring> {
                 Expanded(
                     child: TextButton(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.green[900],
+                    backgroundColor: primaryColor,
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
