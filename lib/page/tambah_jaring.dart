@@ -78,8 +78,7 @@ class _TambahJaringState extends State<TambahJaring> {
                                               Ticker.getTicker(koinId: value!);
                                           tik.then(
                                             (value) {
-                                              hargaController.text =
-                                                  value.last!;
+                                              hargaController.text = value.last;
                                             },
                                           );
                                           setState(() {

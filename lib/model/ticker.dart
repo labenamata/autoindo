@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Ticker {
-  String? high;
-  String? low;
-  String? last;
+  String high;
+  String low;
+  String last;
 
   Ticker({
-    this.high,
-    this.low,
-    this.last,
+    required this.high,
+    required this.low,
+    required this.last,
   });
 
   factory Ticker.fromJson(Map<String, dynamic> json) {

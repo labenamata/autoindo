@@ -5,16 +5,15 @@ import 'package:http/http.dart' as http;
 class Info {
   String? name;
   String? balance;
+  String? img;
 
-  Info({
-    this.name,
-    this.balance,
-  });
+  Info({this.name, this.balance, this.img});
 
   factory Info.fromJson(Map<String, dynamic> json) {
     return Info(
       name: json['name'],
       balance: json['balance']['idr'].toString(),
+      img: json['profile_picture'],
     );
   }
 

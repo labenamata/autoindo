@@ -6,7 +6,6 @@ import 'package:auto_indo/komponen/drawer.dart';
 import 'package:auto_indo/komponen/jaring_list.dart';
 import 'package:auto_indo/model/bot_status.dart';
 import 'package:auto_indo/model/jaring.dart';
-import 'package:auto_indo/page/detail_jaring.dart';
 import 'package:auto_indo/page/tambah_jaring.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -192,49 +191,31 @@ class _UtamaState extends State<Utama> {
                                 await Future.delayed(
                                     const Duration(seconds: 2));
                               },
-                              child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 8,
-                                        mainAxisSpacing: 4),
+                              child: ListView.separated(
+                                // gridDelegate:
+                                //     const SliverGridDelegateWithFixedCrossAxisCount(
+                                //         crossAxisCount: 2,
+                                //         crossAxisSpacing: 8,
+                                //         mainAxisSpacing: 4),
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return DetailJaring(
-                                              id: snapshot.data![index].id
-                                                  .toString(),
-                                              koinId:
-                                                  snapshot.data![index].koinId!,
-                                              name: snapshot
-                                                  .data![index].pair!.name!,
-                                              modal:
-                                                  snapshot.data![index].modal!,
-                                              buy: snapshot.data![index].buy!,
-                                              sell: snapshot.data![index].sell!,
-                                              status:
-                                                  snapshot.data![index].status!,
-                                              image: snapshot
-                                                  .data![index].pair!.image!,
-                                            );
-                                          });
-                                    },
-                                    child: jaringList(
-                                        img: snapshot.data![index].pair!.image!,
-                                        id: snapshot.data![index].id.toString(),
-                                        buy: snapshot.data![index].buy!,
-                                        koinName:
-                                            snapshot.data![index].pair!.name!,
-                                        sell: snapshot.data![index].sell!,
-                                        context: context,
-                                        modal: snapshot.data![index].modal!,
-                                        status: snapshot.data![index].status!,
-                                        profit: snapshot.data![index].profit!,
-                                        koinId: snapshot.data![index].koinId!),
+                                  return jaringList(
+                                      img: snapshot.data![index].pair!.image!,
+                                      id: snapshot.data![index].id.toString(),
+                                      buy: snapshot.data![index].buy!,
+                                      koinName:
+                                          snapshot.data![index].pair!.name!,
+                                      sell: snapshot.data![index].sell!,
+                                      context: context,
+                                      modal: snapshot.data![index].modal!,
+                                      status: snapshot.data![index].status!,
+                                      profit: snapshot.data![index].profit!,
+                                      koinId: snapshot.data![index].koinId!);
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return const SizedBox(
+                                    height: 10,
                                   );
                                 },
                               ),
