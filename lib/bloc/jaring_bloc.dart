@@ -62,15 +62,16 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
     // on<JaringTrade>(onJaringTrade);
   }
 
-  FutureOr<void> onJaringAdd(JaringAdd event, Emitter<JaringState> emit) {
+  Future<void> onJaringAdd(JaringAdd event, Emitter<JaringState> emit) async {
     Future<List<Jaring>> jaring;
     emit(JaringLoading());
-    jaring = Jaring.tambahJaring(
+    await Jaring.tambahJaring(
         koinId: event.koinId,
         buy: event.buy,
         sell: event.sell,
         modal: event.modal,
         status: event.status);
+    jaring = Jaring.getJaring();
     emit(JaringLoaded(jaring: jaring));
   }
 
@@ -82,10 +83,12 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
   //   emit(JaringLoaded(jaring: jaring));
   // }
 
-  FutureOr<void> onJaringHapus(JaringHapus event, Emitter<JaringState> emit) {
+  Future<void> onJaringHapus(
+      JaringHapus event, Emitter<JaringState> emit) async {
     Future<List<Jaring>> jaring;
     emit(JaringLoading());
-    jaring = Jaring.hapusJaring(event.id);
+    await Jaring.hapusJaring(event.id);
+    jaring = Jaring.getJaring();
     emit(JaringLoaded(jaring: jaring));
   }
 

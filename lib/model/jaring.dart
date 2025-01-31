@@ -1,6 +1,11 @@
 import 'dart:convert';
+import 'package:auto_indo/constants.dart';
 import 'package:auto_indo/model/pair.dart';
+import 'package:auto_indo/service/auth_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+final AuthService _authService = AuthService();
 
 class Jaring {
   String? id;
@@ -8,7 +13,6 @@ class Jaring {
   String? modal;
   String? buy;
   String? sell;
-  String? get;
   String? profit;
   String? status;
   Pair? pair;
@@ -32,7 +36,7 @@ class Jaring {
       sell: json['sell'],
       profit: json['profit'] ?? '0',
       status: json['status'],
-      pair: Pair.fromJson(json['pair']),
+      pair: Pair.fromJson(json['pairs']),
     );
   }
 
@@ -60,19 +64,32 @@ class Jaring {
   }
 
   static Future<List<Jaring>> getJaring() async {
-    var url = "https://trade.hondamobilsalatiga.com/api/getjaring";
-    http.Response response = await http.get(Uri.parse(url));
-    var result = jsonDecode(response.body) as List;
+    final token = await _authService.getToken();
+    var uri = "$url/jaring";
+    http.Response response = await http.get(
+      Uri.parse(uri),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
+    var result = jsonDecode(response.body);
+    var data = result['data'] as List;
     //await helper.insert(PairQuery.tableName, result);
     List<Jaring> listJaring =
-        result.map((item) => Jaring.fromJson(item)).toList();
+        data.map((item) => Jaring.fromJson(item)).toList();
 
     return listJaring;
   }
 
   static Future<Jaring> detailJaring(String id) async {
-    var url = "https://trade.hondamobilsalatiga.com/api/detailjaring/$id";
-    http.Response response = await http.get(Uri.parse(url));
+    final token = await _authService.getToken();
+    var uri = "$url/jaring/$id";
+    http.Response response = await http.get(
+      Uri.parse(uri),
+      headers: {
+        "Authorization": "Bearer $token",
+      },
+    );
     var result = jsonDecode(response.body);
     //await helper.insert(PairQuery.tableName, result);
     Jaring listJaring = Jaring.fromJson(result);
@@ -80,44 +97,37 @@ class Jaring {
     return listJaring;
   }
 
-  static Future<List<Jaring>> hapusJaring(String id) async {
-    var url = "https://trade.hondamobilsalatiga.com/api/hapusjaring/$id";
-    http.Response response = await http.get(Uri.parse(url));
-    var result = jsonDecode(response.body) as List;
-    //await helper.insert(PairQuery.tableName, result);
-    List<Jaring> listJaring =
-        result.map((item) => Jaring.fromJson(item)).toList();
-
-    return listJaring;
+  static Future<void> hapusJaring(String id) async {
+    final token = await _authService.getToken();
+    var uri = "$url/jaring?id=$id";
+    await http.delete(Uri.parse(uri), headers: {
+      "Authorization": "Bearer $token",
+    });
   }
 
-  static Future<List<Jaring>> tambahJaring({
+  static Future tambahJaring({
     required String koinId,
     required String modal,
     required String buy,
     required String sell,
     required String status,
   }) async {
-    var url = "https://trade.hondamobilsalatiga.com/api/addjaring";
-    http.Response response = await http.post(
-      Uri.parse(url),
+    final token = await _authService.getToken();
+    var uri = "$url/jaring";
+    final body = {
+      'koin_id': koinId,
+      'modal': modal,
+      'buy': buy,
+      'sell': sell,
+    };
+    await http.post(
+      Uri.parse(uri),
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
       },
       encoding: Encoding.getByName('utf-8'),
-      body: {
-        'koin_id': koinId,
-        'modal': modal,
-        'buy': buy,
-        'sell': sell,
-        'status': status
-      },
+      body: jsonEncode(body),
     );
-    var result = jsonDecode(response.body) as List;
-    //await helper.insert(PairQuery.tableName, result);
-    List<Jaring> listJaring =
-        result.map((item) => Jaring.fromJson(item)).toList();
-
-    return listJaring;
   }
 }

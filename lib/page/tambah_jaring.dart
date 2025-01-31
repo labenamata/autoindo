@@ -64,11 +64,11 @@ class _TambahJaringState extends State<TambahJaring> {
                                         icon: const Icon(LineIcons.angleDown),
                                         isExpanded: true,
                                         value: idKoin == ''
-                                            ? snapshot.data!.first.koinId!
+                                            ? snapshot.data!.first.ticker!
                                             : idKoin,
                                         items: snapshot.data!.map((item) {
                                           return DropdownMenuItem(
-                                            value: item.koinId,
+                                            value: item.ticker,
                                             child: Text(item.name!),
                                           );
                                         }).toList(),

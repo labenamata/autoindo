@@ -19,7 +19,7 @@ class InfoUnitialized extends InfoState {}
 class InfoLoading extends InfoState {}
 
 class InfoLoaded extends InfoState {
-  final Future<Info> userInfo;
+  final Future<Info?> userInfo;
   InfoLoaded({required this.userInfo});
 }
 
@@ -31,7 +31,7 @@ class InfoBloc extends Bloc<InfoEvent, InfoState> {
   }
 
   FutureOr<void> onInfoGet(InfoGet event, Emitter<InfoState> emit) async {
-    Future<Info> userInfo;
+    Future<Info?> userInfo;
     emit(InfoLoading());
     userInfo = Info.getInfo();
     emit(InfoLoaded(userInfo: userInfo));

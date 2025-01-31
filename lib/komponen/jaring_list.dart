@@ -26,7 +26,7 @@ Widget jaringList(
       //margin: const EdgeInsets.only(top: 8),
       decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15))),
+          borderRadius: BorderRadius.all(Radius.circular(8))),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Column(
         children: [
@@ -47,7 +47,7 @@ Widget jaringList(
                     color: status.toUpperCase() == 'BUY'
                         ? Colors.green[50]
                         : Colors.red[50],
-                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                    borderRadius: const BorderRadius.all(Radius.circular(6))),
                 child: Text(
                   status.toUpperCase(),
                   style: TextStyle(
@@ -144,6 +144,9 @@ Widget jaringList(
                   maximumSize: const Size(90, 50),
                   backgroundColor: Colors.red[300],
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6), // Set radius here
+                  ),
                 ),
                 onPressed: () {
                   showDialog(

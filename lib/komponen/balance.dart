@@ -13,7 +13,7 @@ Widget balanceWidget() {
       return const Center(child: CircularProgressIndicator());
     } else {
       InfoLoaded infoLoaded = state as InfoLoaded;
-      return FutureBuilder<Info>(
+      return FutureBuilder<Info?>(
         future: infoLoaded.userInfo,
         builder: (context, snapshot) {
           var f = NumberFormat("#,###.0#", "en_US");
@@ -34,7 +34,7 @@ Widget balanceWidget() {
                     height: 70,
                   ),
                 ),
-                const Spacer(),
+                //const Spacer(),
                 Text(
                   snapshot.data!.name!,
                   style: const TextStyle(fontSize: 16, color: Colors.white),

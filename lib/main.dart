@@ -1,6 +1,7 @@
 import 'package:auto_indo/bloc/info_bloc.dart';
 import 'package:auto_indo/bloc/jaring_bloc.dart';
 import 'package:auto_indo/bloc/pair_bloc.dart';
+import 'package:auto_indo/page/login_page.dart';
 import 'package:auto_indo/utama.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +31,6 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
                 fontFamily: GoogleFonts.poppins().fontFamily),
             debugShowCheckedModeBanner: false,
-            home: const Utama(),
+            home: const LoginScreen(),
           ));
 }

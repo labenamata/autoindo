@@ -22,7 +22,8 @@ class Ticker {
   }
 
   static Future<Ticker> getTicker({required String koinId}) async {
-    var url = "https://indodax.com/api/ticker/$koinId";
+    String pair = koinId.replaceAll('_', '');
+    var url = "https://indodax.com/api/ticker/$pair";
     http.Response response = await http.get(Uri.parse(url));
     var result = jsonDecode(response.body);
     Ticker tick = Ticker.fromJson(result['ticker']);

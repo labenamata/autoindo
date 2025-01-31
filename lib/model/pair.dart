@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_indo/constants.dart';
 import 'package:http/http.dart' as http;
 
 class Pair {
@@ -55,8 +56,8 @@ class Pair {
   }
 
   static Future<List<Pair>> getPair({required String currency}) async {
-    var url = "https://trade.hondamobilsalatiga.com/api/pair/$currency";
-    http.Response response = await http.get(Uri.parse(url));
+    var uri = "$url/koin/$currency";
+    http.Response response = await http.get(Uri.parse(uri));
     var result = jsonDecode(response.body) as List;
     //await helper.insert(PairQuery.tableName, result);
     List<Pair> listPair = result.map((item) => Pair.fromJson(item)).toList();

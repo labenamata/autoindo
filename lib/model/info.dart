@@ -1,6 +1,11 @@
 import 'dart:convert';
 
+import 'package:auto_indo/constants.dart';
+import 'package:auto_indo/service/auth_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+final AuthService _authService = AuthService();
 
 class Info {
   String? name;
@@ -11,19 +16,33 @@ class Info {
 
   factory Info.fromJson(Map<String, dynamic> json) {
     return Info(
-      name: json['name'],
-      balance: json['balance']['idr'].toString(),
-      img: json['profile_picture'],
+      name: json['return']['name'],
+      balance: json['return']['balance']['idr'].toString(),
+      img: json['return']['profile_picture'],
     );
   }
 
-  static Future<Info> getInfo() async {
-    var url = "https://trade.hondamobilsalatiga.com/api/info";
-    http.Response response = await http.get(Uri.parse(url));
-    var result = jsonDecode(response.body);
-    //await helper.insert(PairQuery.tableName, result);
-    Info userInfo = Info.fromJson(result);
+  static Future<Info?> getInfo() async {
+    final token = await _authService.getToken();
 
-    return userInfo;
+    var uri = "$url/profile";
+    try {
+      http.Response response = await http.get(
+        Uri.parse(uri),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      );
+      var result = jsonDecode(response.body);
+      //await helper.insert(PairQuery.tableName, result);
+      Info userInfo = Info.fromJson(result);
+
+      return userInfo;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error during login: $e');
+      }
+      return null;
+    }
   }
 }
