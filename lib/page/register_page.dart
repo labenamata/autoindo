@@ -1,6 +1,7 @@
 import 'package:auto_indo/page/set_keys.dart';
 import 'package:auto_indo/service/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -37,8 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         });
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Registration failed')));
+        Fluttertoast.showToast(msg: 'Registration failed');
       }
     }
   }

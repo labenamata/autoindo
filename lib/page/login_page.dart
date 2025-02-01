@@ -2,6 +2,7 @@ import 'package:auto_indo/page/register_page.dart';
 import 'package:auto_indo/service/auth_service.dart';
 import 'package:auto_indo/utama.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -30,8 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return true;
         // Navigate to MainPage without using context in async
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Registration failed')));
+        Fluttertoast.showToast(msg: 'Login Failed');
+
         return false;
       }
     }
