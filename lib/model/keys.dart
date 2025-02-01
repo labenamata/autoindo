@@ -15,8 +15,8 @@ class Keys {
 
   factory Keys.fromJson(Map<String, dynamic> json) {
     return Keys(
-      key: json['key'],
-      secret: json['secret'],
+      key: json['key'] ?? '',
+      secret: json['secret'] ?? '',
     );
   }
 

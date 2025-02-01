@@ -15,9 +15,9 @@ class Ticker {
 
   factory Ticker.fromJson(Map<String, dynamic> json) {
     return Ticker(
-      high: json['high'],
-      low: json['low'],
-      last: json['last'],
+      high: json['high'] ?? '',
+      low: json['low'] ?? '',
+      last: json['last'] ?? '',
     );
   }
 

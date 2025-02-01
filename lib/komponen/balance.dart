@@ -21,30 +21,19 @@ Widget balanceWidget() {
             if (kDebugMode) {
               print(snapshot.data!.img!);
             }
-            return Column(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //const Spacer(),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: Image(
-                    image: NetworkImage(snapshot.data!.img!),
-                    width: 70,
-                    height: 70,
+            return UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.amber,
+                ),
+                accountName: Text(snapshot.data!.name!),
+                accountEmail:
+                    Text('IDR ${f.format(int.parse(snapshot.data!.balance!))}'),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    snapshot.data!.img!, // Replace with your image URL
                   ),
-                ),
-                //const Spacer(),
-                Text(
-                  snapshot.data!.name!,
-                  style: const TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                Text(
-                  'IDR ${f.format(int.parse(snapshot.data!.balance!))}',
-                  style: const TextStyle(fontSize: 16, color: Colors.white),
-                )
-              ],
-            );
+                  radius: 30,
+                ));
           } else {
             return const Center(child: CircularProgressIndicator());
           }

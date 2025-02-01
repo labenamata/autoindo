@@ -1,7 +1,6 @@
 import 'package:auto_indo/model/keys.dart';
-import 'package:auto_indo/service/auth_service.dart';
-import 'package:auto_indo/utama.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SetKeys extends StatefulWidget {
   const SetKeys({super.key});
@@ -11,9 +10,26 @@ class SetKeys extends StatefulWidget {
 }
 
 class _SetKeysState extends State<SetKeys> {
+  late final Keys? kunci;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _keyController = TextEditingController();
   final TextEditingController _secretController = TextEditingController();
+
+  void _getKey() async {
+    Keys? kuncis = await Keys.getKeys();
+    _keyController.text = kuncis?.key ?? '';
+    _secretController.text = kuncis?.secret ?? '';
+
+    setState(() {
+      kunci = kuncis;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getKey();
+  }
 
   void _saveKeys() async {
     if (_formKey.currentState!.validate()) {
@@ -24,16 +40,10 @@ class _SetKeysState extends State<SetKeys> {
 
       if (saved) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Utama(),
-            ),
-          );
+          Navigator.of(context).popUntil((route) => route.isFirst);
         });
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Registration failed')));
+        Fluttertoast.showToast(msg: 'Registration failed');
       }
     }
   }
@@ -52,6 +62,7 @@ class _SetKeysState extends State<SetKeys> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
+                maxLines: 2,
                 controller: _keyController,
                 decoration: InputDecoration(
                   labelText: 'key',
@@ -68,6 +79,7 @@ class _SetKeysState extends State<SetKeys> {
               ),
               SizedBox(height: 16),
               TextFormField(
+                maxLines: 5,
                 controller: _secretController,
                 decoration: InputDecoration(
                   labelText: 'secret',
@@ -75,7 +87,6 @@ class _SetKeysState extends State<SetKeys> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your secret';

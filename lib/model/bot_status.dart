@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:auto_indo/constants.dart';
 import 'package:auto_indo/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
@@ -30,7 +28,7 @@ class BotStatus {
       );
       var result = jsonDecode(response.body);
       if (kDebugMode) {
-        print(result['state']);
+        print(result);
       }
       BotStatus botInfo = BotStatus.fromJson(result);
 
@@ -43,7 +41,7 @@ class BotStatus {
     }
   }
 
-  static Future updateStatus(String st, String token) async {
+  static Future updateStatus(String st) async {
     final token = await _authService.getToken();
     var uri = "$url/bstate";
     final body = {'state': st, '_method': 'put'};

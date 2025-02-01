@@ -38,6 +38,14 @@ class JaringAdd extends JaringEvent {
       required this.status});
 }
 
+class JaringBatch extends JaringEvent {
+  final List<Jaring> data;
+
+  JaringBatch({
+    required this.data,
+  });
+}
+
 class JaringUpdate extends JaringEvent {
   final Map<String, dynamic> data;
   final String id;
@@ -57,6 +65,7 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
   JaringBloc(super.initialState) {
     on<JaringGet>(onJaringGet);
     on<JaringAdd>(onJaringAdd);
+    on<JaringBatch>(onJaringBatch);
     // on<JaringUpdate>(onJaringUpdate);
     on<JaringHapus>(onJaringHapus);
     // on<JaringTrade>(onJaringTrade);
@@ -71,6 +80,15 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
         sell: event.sell,
         modal: event.modal,
         status: event.status);
+    jaring = Jaring.getJaring();
+    emit(JaringLoaded(jaring: jaring));
+  }
+
+  Future<void> onJaringBatch(
+      JaringBatch event, Emitter<JaringState> emit) async {
+    Future<List<Jaring>> jaring;
+    emit(JaringLoading());
+    await Jaring.jaringBatch(jarings: event.data);
     jaring = Jaring.getJaring();
     emit(JaringLoaded(jaring: jaring));
   }

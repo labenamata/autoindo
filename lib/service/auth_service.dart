@@ -69,9 +69,31 @@ class AuthService {
     }
   }
 
+  Future<void> logout() async {
+    final String apiUrl = "$url/logout";
+    try {
+      await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error during login: $e');
+      }
+    }
+    deleteToken();
+  }
+
   Future<void> saveToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
+  }
+
+  Future<void> deleteToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('auth_token');
   }
 
   Future<String?> getToken() async {

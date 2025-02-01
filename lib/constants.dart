@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-var formatter = NumberFormat.decimalPattern();
+var formatter = NumberFormat('##.####');
 
 const backgroundColor = Color(0xFFF4F5FA);
 const textColor = Color(0xFFAEB1BC);

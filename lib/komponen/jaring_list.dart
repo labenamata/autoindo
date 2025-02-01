@@ -15,8 +15,9 @@ Widget jaringList(
     required String modal,
     required String status,
     required String profit,
+    required String currency,
     required BuildContext context}) {
-  var f = NumberFormat("#,###.0#", "en_US");
+  var f = NumberFormat("#,###", "en_US");
 
   Future<Ticker> tik = Ticker.getTicker(koinId: koinId);
 
@@ -29,6 +30,7 @@ Widget jaringList(
           borderRadius: BorderRadius.all(Radius.circular(8))),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -61,9 +63,16 @@ Widget jaringList(
               FutureBuilder<Ticker>(
                 future: tik,
                 builder: (context, snapshot) {
+                  String lastPrice;
+
                   if (snapshot.hasData) {
+                    if (currency == 'idr') {
+                      lastPrice = f.format(double.parse(snapshot.data!.last));
+                    } else {
+                      lastPrice = snapshot.data!.last;
+                    }
                     return Text(
-                      f.format(double.parse(snapshot.data!.last)),
+                      lastPrice,
                       style: const TextStyle(
                           color: textBold, fontWeight: FontWeight.bold),
                     );
@@ -85,7 +94,7 @@ Widget jaringList(
               )),
               Expanded(
                   child: Text(
-                f.format(double.parse(modal)),
+                currency == 'idr' ? f.format(double.parse(modal)) : modal,
                 style: const TextStyle(color: textColor),
               ))
             ],
@@ -100,7 +109,9 @@ Widget jaringList(
               )),
               Expanded(
                   child: Text(
-                f.format(double.parse(buy)),
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                currency == 'idr' ? f.format(double.parse(buy)) : buy,
                 style: const TextStyle(color: textColor),
               ))
             ],
@@ -115,7 +126,9 @@ Widget jaringList(
               )),
               Expanded(
                   child: Text(
-                f.format(double.parse(sell)),
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                currency == 'idr' ? f.format(double.parse(sell)) : sell,
                 style: const TextStyle(color: textColor),
               ))
             ],
@@ -130,7 +143,9 @@ Widget jaringList(
               )),
               Expanded(
                   child: Text(
-                f.format(double.parse(profit)),
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                currency == 'idr' ? f.format(double.parse(profit)) : profit,
                 style: const TextStyle(color: textColor),
               ))
             ],

@@ -130,4 +130,30 @@ class Jaring {
       body: jsonEncode(body),
     );
   }
+
+  static Future jaringBatch({
+    required List<Jaring> jarings,
+  }) async {
+    final token = await _authService.getToken();
+
+    List<Map<String, dynamic>> data =
+        jarings.map((item) => item.toJson()).toList();
+    var uri = "$url/jaring/batch";
+    final body = {
+      'jarings': data,
+    };
+
+    if (kDebugMode) {
+      print(jsonEncode(body));
+    }
+    await http.post(
+      Uri.parse(uri),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
+      encoding: Encoding.getByName('utf-8'),
+      body: jsonEncode(body),
+    );
+  }
 }

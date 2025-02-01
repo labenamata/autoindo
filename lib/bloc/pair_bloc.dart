@@ -23,7 +23,10 @@ class PairLoaded extends PairState {
   PairLoaded({required this.pair});
 }
 
-class PairGet extends PairEvent {}
+class PairGet extends PairEvent {
+  final String current;
+  PairGet({required this.current});
+}
 
 class PairBloc extends Bloc<PairEvent, PairState> {
   PairBloc(super.initialState) {
@@ -33,7 +36,7 @@ class PairBloc extends Bloc<PairEvent, PairState> {
   FutureOr<void> onPairGet(PairGet event, Emitter<PairState> emit) async {
     Future<List<Pair>> pair;
     emit(PairLoading());
-    pair = Pair.getPair(currency: 'idr');
+    pair = Pair.getPair(currency: event.current);
     emit(PairLoaded(pair: pair));
   }
 }

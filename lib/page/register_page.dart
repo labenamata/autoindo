@@ -1,6 +1,5 @@
 import 'package:auto_indo/page/set_keys.dart';
 import 'package:auto_indo/service/auth_service.dart';
-import 'package:auto_indo/utama.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
