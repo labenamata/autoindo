@@ -42,6 +42,7 @@ Widget menuDrawer(BuildContext context) {
                 );
               }
               if (state is BstateLoading) {
+                //context.loaderOverlay.show();
                 return ListTile(
                   leading: Icon(LineIcons.truckLoading, color: Colors.amber),
                   title: Center(
@@ -68,6 +69,7 @@ Widget menuDrawer(BuildContext context) {
                       BstateBloc bstateBloc =
                           BlocProvider.of<BstateBloc>(context);
                       bstateBloc.add(BstateUpdate(stat));
+                      Navigator.pop(context);
                     },
                   );
                 },
@@ -78,19 +80,28 @@ Widget menuDrawer(BuildContext context) {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
-            onPressed: () async {
-              await _authService.logout();
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.loaderOverlay.show();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                );
-                context.loaderOverlay.hide();
+            onPressed: () {
+              // _authService.logout();
+              Navigator.pop(context);
+              context.loaderOverlay.show();
+              Future.delayed(Duration(seconds: 1), () async {
+                await _authService.logout();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.loaderOverlay.hide();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  );
+                });
               });
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => LoginScreen(),
+              //   ),
+              // );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.amber,

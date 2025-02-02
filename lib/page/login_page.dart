@@ -30,13 +30,30 @@ class _LoginScreenState extends State<LoginScreen> {
         await _authService.saveToken(token);
         return true;
         // Navigate to MainPage without using context in async
-      } else {
-        Fluttertoast.showToast(msg: 'Login Failed');
-
-        return false;
       }
     }
     return false;
+  }
+
+  void checkLoginStatus() async {
+    String? token = await _authService.getToken();
+    if (token != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.loaderOverlay.hide();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Utama(),
+          ),
+        );
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
   }
 
   @override
@@ -60,7 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(height: 8),
               Text(
                 'You must login into your account to continue',
@@ -83,26 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Row(
-              //       children: [
-              //         Checkbox(value: false, onChanged: (value) {}),
-              //         const Text('Remember me'),
-              //       ],
-              //     ),
-              //     GestureDetector(
-              //       onTap: () {},
-              //       child: const Text(
-              //         'Forgot Password?',
-              //         style: TextStyle(
-              //           color: Colors.blue,
-              //         ),
-              //       ),
-              //     )
-              //   ],
-              // ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -122,6 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       });
                     } else {
+                      Fluttertoast.showToast(msg: 'Login Failed');
+
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         context.loaderOverlay.hide();
                         //Fluttertoast.showToast(msg: 'Login Failed');
@@ -143,7 +141,6 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               const Text('or'),
               const SizedBox(height: 16),
-
               GestureDetector(
                 onTap: () {
                   Navigator.push(context,

@@ -2,6 +2,7 @@ import 'package:auto_indo/page/set_keys.dart';
 import 'package:auto_indo/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
-  void _registerUser() async {
+  Future<bool> _registerUser() async {
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
@@ -27,20 +28,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
       if (token != null) {
         await _authService.saveToken(token);
-
+        return true;
         // Navigate to MainPage without using context in async
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SetKeys(),
-            ),
-          );
-        });
-      } else {
-        Fluttertoast.showToast(msg: 'Registration failed');
       }
     }
+    return false;
   }
 
   @override
@@ -117,7 +109,30 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: _registerUser,
+                onPressed: () async {
+                  FocusScope.of(context).unfocus();
+                  context.loaderOverlay.show();
+                  FocusScope.of(context).unfocus();
+                  context.loaderOverlay.show();
+                  final register = await _registerUser();
+                  if (register) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      context.loaderOverlay.hide();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SetKeys(),
+                        ),
+                      );
+                    });
+                  } else {
+                    Fluttertoast.showToast(msg: 'Register Failed');
+
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      context.loaderOverlay.hide();
+                    });
+                  }
+                },
                 child: Text('Register'),
               ),
             ],

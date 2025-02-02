@@ -27,9 +27,7 @@ class BotStatus {
         },
       );
       var result = jsonDecode(response.body);
-      if (kDebugMode) {
-        print(result);
-      }
+
       BotStatus botInfo = BotStatus.fromJson(result);
 
       return botInfo;

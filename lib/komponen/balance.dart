@@ -35,7 +35,18 @@ Widget balanceWidget() {
                   radius: 30,
                 ));
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.amber,
+                ),
+                accountName: Text('Tidak bisa memuat profile'),
+                accountEmail: Text('Cek Internet atau key anda'),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    '', // Replace with your image URL
+                  ),
+                  radius: 30,
+                ));
           }
         },
       );
