@@ -4,6 +4,7 @@ import 'package:auto_indo/utama.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   final AuthService _authService = AuthService();
 
   Future<bool> _loginUser() async {
@@ -50,10 +52,29 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void checkAddress() async {
+    String? address = await _authService.getAddress();
+    if (address != null) {
+      setState(() {
+        _addressController.text = address;
+      });
+      checkLoginStatus();
+    }
+  }
+
+  Future<bool> _saveAddress() async {
+    if (_addressController.text.isNotEmpty) {
+      await _authService.saveAddress(_addressController.text);
+
+      return true;
+    }
+    return false;
+  }
+
   @override
   void initState() {
     super.initState();
-    checkLoginStatus();
+    checkAddress();
   }
 
   @override
@@ -63,6 +84,49 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         //backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          leading: GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Settings'),
+                    content: TextField(
+                      controller: _addressController,
+                      decoration: InputDecoration(
+                          label: Text('Server Address'),
+                          border: OutlineInputBorder()),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          bool savedAddress = await _saveAddress();
+                          if (savedAddress) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              Navigator.pop(context);
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Text('Save'),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Icon(LineIcons.bars),
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(

@@ -65,6 +65,7 @@ class Jaring {
 
   static Future<List<Jaring>> getJaring() async {
     final token = await _authService.getToken();
+
     var uri = "$url/jaring";
     http.Response response = await http.get(
       Uri.parse(uri),
@@ -83,6 +84,7 @@ class Jaring {
 
   static Future<Jaring> detailJaring(String id) async {
     final token = await _authService.getToken();
+
     var uri = "$url/jaring/$id";
     http.Response response = await http.get(
       Uri.parse(uri),
@@ -99,6 +101,7 @@ class Jaring {
 
   static Future<void> hapusJaring(String id) async {
     final token = await _authService.getToken();
+
     var uri = "$url/jaring?id=$id";
     await http.delete(Uri.parse(uri), headers: {
       "Authorization": "Bearer $token",
@@ -113,6 +116,7 @@ class Jaring {
     required String status,
   }) async {
     final token = await _authService.getToken();
+
     var uri = "$url/jaring";
     final body = {
       'koin_id': koinId,
@@ -138,6 +142,7 @@ class Jaring {
 
     List<Map<String, dynamic>> data =
         jarings.map((item) => item.toJson()).toList();
+
     var uri = "$url/jaring/batch";
     final body = {
       'jarings': data,

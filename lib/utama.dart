@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:line_icons/line_icons.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 
 const List<Widget> icons = <Widget>[
   Icon(Icons.play_arrow_rounded),

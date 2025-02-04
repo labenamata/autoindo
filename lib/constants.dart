@@ -8,4 +8,4 @@ const textColor = Color(0xFFAEB1BC);
 const textBold = Color(0xFF66686C);
 const primaryColor = Color(0xFF176B87);
 
-const String url = 'http://192.168.1.9:8000/api';
+const String url = 'https://autoindo.my.id/api';

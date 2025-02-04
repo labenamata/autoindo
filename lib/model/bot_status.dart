@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:auto_indo/constants.dart';
 import 'package:auto_indo/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +19,7 @@ class BotStatus {
 
   static Future<BotStatus?> getStatus() async {
     final token = await _authService.getToken();
+
     try {
       var uri = "$url/bstate";
       http.Response response = await http.get(
