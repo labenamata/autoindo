@@ -52,64 +52,80 @@ class _SetKeysState extends State<SetKeys> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.amber,
         title: Text('Setting Key dan Secret'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                maxLines: 2,
-                controller: _keyController,
-                decoration: InputDecoration(
-                  labelText: 'key',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          double lebar = double.infinity;
+          MainAxisAlignment alignment = MainAxisAlignment.start;
+
+          if (constraints.maxWidth > 600) {
+            lebar = 500;
+            alignment = MainAxisAlignment.center;
+          }
+
+          return Center(
+            child: SizedBox(
+              width: lebar,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: alignment,
+                  children: [
+                    TextFormField(
+                      maxLines: 2,
+                      controller: _keyController,
+                      decoration: InputDecoration(
+                        labelText: 'key',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your key';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      maxLines: 5,
+                      controller: _secretController,
+                      decoration: InputDecoration(
+                        labelText: 'secret',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your secret';
+                        } else if (value.length < 6) {
+                          return 'secret must be at least 6 characters long';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.amber,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: _saveKeys,
+                      child: Text('Simpan'),
+                    ),
+                  ],
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your key';
-                  }
-                  return null;
-                },
               ),
-              SizedBox(height: 16),
-              TextFormField(
-                maxLines: 5,
-                controller: _secretController,
-                decoration: InputDecoration(
-                  labelText: 'secret',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your secret';
-                  } else if (value.length < 6) {
-                    return 'secret must be at least 6 characters long';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: _saveKeys,
-                child: Text('Simpan'),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        }),
       ),
     );
   }

@@ -65,176 +65,193 @@ class _KetahananListState extends State<KetahananList> {
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('Currency'),
-                        const Spacer(),
-                        Text(widget.currency)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Koin'),
-                        const Spacer(),
-                        Text(widget.ketahanan.koinId!)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('indikator'),
-                        const Spacer(),
-                        Text(widget.currency == 'IDR'
-                            ? f.format(int.parse(widget.ketahanan.indikator!))
-                            : widget.ketahanan.indikator!)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Ketahanan'),
-                        const Spacer(),
-                        Text(widget.ketahanan.ketahanan!)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Selisih'),
-                        const Spacer(),
-                        Text('${widget.ketahanan.selisih!} %')
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Margin'),
-                        const Spacer(),
-                        Text('${widget.ketahanan.margin!} %')
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Modal'),
-                        const Spacer(),
-                        Text(widget.currency == 'IDR'
-                            ? f.format(int.parse(widget.ketahanan.modal!))
-                            : widget.ketahanan.modal!)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Mode'),
-                        const Spacer(),
-                        Text(widget.ketahanan.mode!)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Kenaikan'),
-                        const Spacer(),
-                        Text('${widget.ketahanan.kenaikan!} %')
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: jaringList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text('Modal'),
-                                Spacer(),
-                                Text(widget.currency == 'IDR'
-                                    ? f.format(
-                                        int.parse(jaringList[index].modal!))
-                                    : jaringList[index].modal!)
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text('Buy'),
-                                Spacer(),
-                                Text(widget.currency == 'IDR'
-                                    ? f.format(
-                                        int.parse(jaringList[index].buy!))
-                                    : jaringList[index].buy!)
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text('Sell'),
-                                Spacer(),
-                                Text(widget.currency == 'IDR'
-                                    ? f.format(
-                                        int.parse(jaringList[index].sell!))
-                                    : jaringList[index].sell!)
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-            SizedBox(
-              height: 80,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Center(
-                    child: Row(
-                      children: [
-                        Text(
-                            'Total Modal : ${widget.currency == 'IDR' ? f.format(totalModal) : totalModal}'),
-                        const Spacer(),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            maximumSize: const Size(90, 50),
-                            backgroundColor: Colors.amber,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(6), // Set radius here
-                            ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          double lebar = double.infinity;
+          MainAxisAlignment alignment = MainAxisAlignment.start;
+
+          if (constraints.maxWidth > 600) {
+            lebar = 500;
+            alignment = MainAxisAlignment.center;
+          }
+          return Center(
+            child: SizedBox(
+              width: lebar,
+              child: Column(
+                mainAxisAlignment: alignment,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text('Currency'),
+                              const Spacer(),
+                              Text(widget.currency)
+                            ],
                           ),
-                          onPressed: () {
-                            JaringBloc jaringBloc =
-                                BlocProvider.of<JaringBloc>(context);
-                            jaringBloc.add(JaringBatch(data: jaringList));
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
-                          },
-                          child: Text('Simpan'),
-                        )
-                      ],
+                          Row(
+                            children: [
+                              Text('Koin'),
+                              const Spacer(),
+                              Text(widget.ketahanan.koinId!)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('indikator'),
+                              const Spacer(),
+                              Text(widget.currency == 'IDR'
+                                  ? f.format(
+                                      int.parse(widget.ketahanan.indikator!))
+                                  : widget.ketahanan.indikator!)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('Ketahanan'),
+                              const Spacer(),
+                              Text(widget.ketahanan.ketahanan!)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('Selisih'),
+                              const Spacer(),
+                              Text('${widget.ketahanan.selisih!} %')
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('Margin'),
+                              const Spacer(),
+                              Text('${widget.ketahanan.margin!} %')
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('Modal'),
+                              const Spacer(),
+                              Text(widget.currency == 'IDR'
+                                  ? f.format(int.parse(widget.ketahanan.modal!))
+                                  : widget.ketahanan.modal!)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('Mode'),
+                              const Spacer(),
+                              Text(widget.ketahanan.mode!)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text('Kenaikan'),
+                              const Spacer(),
+                              Text('${widget.ketahanan.kenaikan!} %')
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: jaringList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('Modal'),
+                                      Spacer(),
+                                      Text(widget.currency == 'IDR'
+                                          ? f.format(int.parse(
+                                              jaringList[index].modal!))
+                                          : jaringList[index].modal!)
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Buy'),
+                                      Spacer(),
+                                      Text(widget.currency == 'IDR'
+                                          ? f.format(
+                                              int.parse(jaringList[index].buy!))
+                                          : jaringList[index].buy!)
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text('Sell'),
+                                      Spacer(),
+                                      Text(widget.currency == 'IDR'
+                                          ? f.format(int.parse(
+                                              jaringList[index].sell!))
+                                          : jaringList[index].sell!)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                  SizedBox(
+                    height: 80,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Text(
+                                  'Total Modal : ${widget.currency == 'IDR' ? f.format(totalModal) : totalModal}'),
+                              const Spacer(),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  maximumSize: const Size(90, 50),
+                                  backgroundColor: Colors.amber,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        6), // Set radius here
+                                  ),
+                                ),
+                                onPressed: () {
+                                  JaringBloc jaringBloc =
+                                      BlocProvider.of<JaringBloc>(context);
+                                  jaringBloc.add(JaringBatch(data: jaringList));
+                                  Navigator.of(context)
+                                      .popUntil((route) => route.isFirst);
+                                },
+                                child: Text('Simpan'),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          );
+        }),
       ),
     );
   }

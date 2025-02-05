@@ -67,7 +67,11 @@ class Pair {
 
   static Future<List<Pair>> filterPair(
       {required String currency, required String name}) async {
-    var uri = "$url/koin/$currency/$name";
+    String nama = 'all';
+    if (name != '') {
+      nama = name;
+    }
+    var uri = "$url/koin/$currency/$nama";
     http.Response response = await http.get(Uri.parse(uri));
     var result = jsonDecode(response.body) as List;
     //await helper.insert(PairQuery.tableName, result);

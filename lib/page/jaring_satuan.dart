@@ -34,207 +34,222 @@ class _JaringSatuanState extends State<JaringSatuan> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Currency Dropdown
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Currency',
-                border: OutlineInputBorder(),
-              ),
-              value: selectedCurrency,
-              onChanged: (value) {
-                PairBloc pairBloc = BlocProvider.of<PairBloc>(context);
-                pairBloc.add(PairGet(current: value!));
-                _dropdownSearchKey.currentState?.clear();
-                setState(() {
-                  selectedItem = Pair(
-                    name: '',
-                  );
-                  selectedCurrency = value;
-                  hargaController.text = '';
-                });
-              },
-              items: currencies.map((currency) {
-                return DropdownMenuItem(
-                  value: currency,
-                  child: Text(currency),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 16),
+        child: LayoutBuilder(builder: (context, constraints) {
+          double lebar = double.infinity;
+          MainAxisAlignment alignment = MainAxisAlignment.start;
 
-            // Koin Dropdown
-            Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child:
-                        //idKoin = snapshot.data!.first.koinId!;
-                        DropdownSearch<Pair>(
-                      key: _dropdownSearchKey,
-                      onChanged: (item) {
-                        Future<Ticker> tik;
-                        tik = Ticker.getTicker(koinId: item!.koinId!);
-                        tik.then(
-                          (value) {
-                            hargaController.text = value.last;
-                          },
+          if (constraints.maxWidth > 600) {
+            lebar = 500;
+            alignment = MainAxisAlignment.center;
+          }
+          return Center(
+            child: SizedBox(
+              width: lebar,
+              child: Column(
+                mainAxisAlignment: alignment,
+                children: [
+                  // Currency Dropdown
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Currency',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedCurrency,
+                    onChanged: (value) {
+                      PairBloc pairBloc = BlocProvider.of<PairBloc>(context);
+                      pairBloc.add(PairGet(current: value!));
+                      _dropdownSearchKey.currentState?.clear();
+                      setState(() {
+                        selectedItem = Pair(
+                          name: '',
                         );
-                        setState(() {
-                          selectedKoin = item.ticker;
-                        });
-                      },
-                      selectedItem: selectedItem,
-                      items: (f, cs) =>
-                          Pair.filterPair(currency: selectedCurrency!, name: f),
-                      compareFn: (item, selectedItem) =>
-                          item.koinId == selectedItem.koinId,
-                      dropdownBuilder: (context, selectedItem) {
-                        if (selectedItem == null) {
-                          return SizedBox.shrink();
-                        }
-                        return DropdownMenuItem(
-                          value: selectedItem.ticker,
-                          child: Text(selectedItem.name!),
-                        );
-                        // return Text(selectedItem.name!);
-                      },
-                      popupProps: PopupProps.modalBottomSheet(
-                        modalBottomSheetProps: ModalBottomSheetProps(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8))),
+                        selectedCurrency = value;
+                        hargaController.text = '';
+                      });
+                    },
+                    items: currencies.map((currency) {
+                      return DropdownMenuItem(
+                        value: currency,
+                        child: Text(currency),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16),
 
-                        disableFilter:
-                            true, //data will be filtered by the backend
-                        showSearchBox: true,
-                        searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
-                          labelText: 'Cari',
-                          border: OutlineInputBorder(),
-                        )),
-                        itemBuilder: (ctx, item, isDisabled, isSelected) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  leading:
-                                      Image(image: NetworkImage(item.image!)),
-                                  selected: isSelected,
-                                  title: Text(item.name!),
-                                ),
-                              ),
+                  // Koin Dropdown
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child:
+                              //idKoin = snapshot.data!.first.koinId!;
+                              DropdownSearch<Pair>(
+                            key: _dropdownSearchKey,
+                            onChanged: (item) {
+                              Future<Ticker> tik;
+                              tik = Ticker.getTicker(koinId: item!.koinId!);
+                              tik.then(
+                                (value) {
+                                  hargaController.text = value.last;
+                                },
+                              );
+                              setState(() {
+                                selectedKoin = item.ticker;
+                              });
+                            },
+                            selectedItem: selectedItem,
+                            items: (f, cs) => Pair.filterPair(
+                                currency: selectedCurrency!, name: f),
+                            compareFn: (item, selectedItem) =>
+                                item.koinId == selectedItem.koinId,
+                            dropdownBuilder: (context, selectedItem) {
+                              if (selectedItem == null) {
+                                return SizedBox.shrink();
+                              }
+                              return DropdownMenuItem(
+                                value: selectedItem.ticker,
+                                child: Text(selectedItem.name!),
+                              );
+                              // return Text(selectedItem.name!);
+                            },
+                            popupProps: PopupProps.modalBottomSheet(
+                              modalBottomSheetProps: ModalBottomSheetProps(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8))),
+
+                              disableFilter:
+                                  true, //data will be filtered by the backend
+                              showSearchBox: true,
+                              searchFieldProps: TextFieldProps(
+                                  decoration: InputDecoration(
+                                labelText: 'Cari',
+                                border: OutlineInputBorder(),
+                              )),
+                              itemBuilder: (ctx, item, isDisabled, isSelected) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListTile(
+                                        leading: Image(
+                                            image: NetworkImage(item.image!)),
+                                        selected: isSelected,
+                                        title: Text(item.name!),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          )),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: TextField(
+                          enabled: false,
+                          controller: hargaController,
+                          decoration: InputDecoration(
+                            labelText: 'Harga',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
                       ),
-                    )),
-                SizedBox(width: 16),
-                Expanded(
-                  child: TextField(
-                    enabled: false,
-                    controller: hargaController,
+                    ],
+                  ),
+                  SizedBox(height: 16),
+
+                  // Modal Field
+                  TextField(
+                    controller: modalController,
                     decoration: InputDecoration(
-                      labelText: 'Harga',
+                      labelText: 'Modal',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
+                  SizedBox(height: 16),
 
-            // Modal Field
-            TextField(
-              controller: modalController,
-              decoration: InputDecoration(
-                labelText: 'Modal',
-                border: OutlineInputBorder(),
+                  // Buy and Sell Fields
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: buyController,
+                          decoration: InputDecoration(
+                            labelText: 'Buy',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: TextField(
+                          controller: sellController,
+                          decoration: InputDecoration(
+                            labelText: 'Sell',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 32),
+
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Handle Batal action
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text('Batal'),
+                      ),
+                      SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (modalController.text.isNotEmpty &&
+                              sellController.text.isNotEmpty &&
+                              buyController.text.isNotEmpty) {
+                            JaringBloc jaringBloc =
+                                BlocProvider.of<JaringBloc>(context);
+                            jaringBloc.add(JaringAdd(
+                                koinId: selectedKoin!,
+                                modal: modalController.text,
+                                sell: sellController.text,
+                                buy: buyController.text,
+                                status: 'pending'));
+                            Navigator.pop(context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text('Simpan'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 16),
-
-            // Buy and Sell Fields
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: buyController,
-                    decoration: InputDecoration(
-                      labelText: 'Buy',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: TextField(
-                    controller: sellController,
-                    decoration: InputDecoration(
-                      labelText: 'Sell',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 32),
-
-            // Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle Batal action
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text('Batal'),
-                ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    if (modalController.text.isNotEmpty &&
-                        sellController.text.isNotEmpty &&
-                        buyController.text.isNotEmpty) {
-                      JaringBloc jaringBloc =
-                          BlocProvider.of<JaringBloc>(context);
-                      jaringBloc.add(JaringAdd(
-                          koinId: selectedKoin!,
-                          modal: modalController.text,
-                          sell: sellController.text,
-                          buy: buyController.text,
-                          status: 'pending'));
-                      Navigator.pop(context);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text('Simpan'),
-                ),
-              ],
-            ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }

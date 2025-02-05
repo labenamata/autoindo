@@ -106,69 +106,95 @@ class _UtamaState extends State<Utama> {
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
-                    BlocBuilder<JaringBloc, JaringState>(
-                        builder: (context, state) {
-                      if (state is JaringUnitialized) {
-                        return Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.red,
+                    Expanded(
+                      child: BlocBuilder<JaringBloc, JaringState>(
+                          builder: (context, state) {
+                        if (state is JaringUnitialized) {
+                          return Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        );
-                      } else if (state is JaringLoading) {
-                        return Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: primaryColor,
+                          );
+                        } else if (state is JaringLoading) {
+                          return Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        JaringLoaded jaringLoaded = state as JaringLoaded;
-                        return FutureBuilder<List<Jaring>>(
-                          future: jaringLoaded.jaring,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Expanded(
-                                child: ListView.separated(
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return jaringList(
-                                        currency: snapshot
-                                            .data![index].pair!.curreny!,
-                                        img: snapshot.data![index].pair!.image!,
-                                        id: snapshot.data![index].id.toString(),
-                                        buy: snapshot.data![index].buy!,
-                                        koinName:
-                                            snapshot.data![index].pair!.name!,
-                                        sell: snapshot.data![index].sell!,
-                                        context: context,
-                                        modal: snapshot.data![index].modal!,
-                                        status: snapshot.data![index].status!,
-                                        profit: snapshot.data![index].profit!,
-                                        koinId: snapshot.data![index].koinId!);
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return const SizedBox(
-                                      height: 10,
-                                    );
-                                  },
-                                ),
-                              );
-                            } else {
-                              return Expanded(
-                                child: Center(
-                                  child: Icon(LineIcons.dochub),
-                                ),
-                              );
-                            }
-                          },
-                        );
-                      }
-                    }),
+                          );
+                        } else {
+                          JaringLoaded jaringLoaded = state as JaringLoaded;
+                          return FutureBuilder<List<Jaring>>(
+                            future: jaringLoaded.jaring,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return LayoutBuilder(
+                                    builder: (context, constraints) {
+                                  // double lebar = double.infinity;
+
+                                  int crossAxisCount = 1;
+                                  double childAspectRatio = 2;
+
+                                  if (constraints.maxWidth > 600) {
+                                    crossAxisCount = 2;
+                                    childAspectRatio = 1.5;
+                                  }
+                                  if (constraints.maxWidth > 900) {
+                                    crossAxisCount = 4;
+                                    childAspectRatio = 2.5;
+                                  }
+                                  return GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: crossAxisCount,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: childAspectRatio,
+                                    ),
+                                    itemCount: snapshot.data!.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return jaringList(
+                                          currency: snapshot
+                                              .data![index].pair!.curreny!,
+                                          img: snapshot
+                                              .data![index].pair!.image!,
+                                          id: snapshot.data![index].id
+                                              .toString(),
+                                          buy: snapshot.data![index].buy!,
+                                          koinName:
+                                              snapshot.data![index].pair!.name!,
+                                          sell: snapshot.data![index].sell!,
+                                          context: context,
+                                          modal: snapshot.data![index].modal!,
+                                          status: snapshot.data![index].status!,
+                                          profit: snapshot.data![index].profit!,
+                                          koinId:
+                                              snapshot.data![index].koinId!);
+                                    },
+                                    // separatorBuilder:
+                                    //     (BuildContext context, int index) {
+                                    //   return const SizedBox(
+                                    //     height: 10,
+                                    //   );
+                                    // },
+                                  );
+                                });
+                              } else {
+                                return Expanded(
+                                  child: Center(
+                                    child: Icon(LineIcons.dochub),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }
+                      }),
+                    ),
                     SizedBox(
                       height: 80,
                       child: Card(

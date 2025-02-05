@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_indo/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,8 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   Future<String?> registerUser(
       String name, String email, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? url = prefs.getString('server_address');
     final String apiUrl = "$url/register";
     try {
       final response = await http.post(
@@ -41,8 +40,6 @@ class AuthService {
   }
 
   Future<String?> loginUser(String email, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? url = prefs.getString('server_address');
     final String apiUrl = "$url/login";
     try {
       final response = await http.post(
@@ -74,8 +71,6 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? url = prefs.getString('server_address');
     final String apiUrl = "$url/logout";
     try {
       await http.post(

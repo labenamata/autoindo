@@ -4,7 +4,6 @@ import 'package:auto_indo/utama.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -62,19 +61,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<bool> _saveAddress() async {
-    if (_addressController.text.isNotEmpty) {
-      await _authService.saveAddress(_addressController.text);
+  // Future<bool> _saveAddress() async {
+  //   if (_addressController.text.isNotEmpty) {
+  //     await _authService.saveAddress(_addressController.text);
 
-      return true;
-    }
-    return false;
-  }
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   @override
   void initState() {
     super.initState();
-    checkAddress();
+    checkLoginStatus();
   }
 
   @override
@@ -84,27 +83,79 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         //backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Settings'),
-                    content: TextField(
-                      controller: _addressController,
-                      decoration: InputDecoration(
-                          label: Text('Server Address'),
-                          border: OutlineInputBorder()),
+
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: LayoutBuilder(builder: (context, constraints) {
+            double lebar = double.infinity;
+
+            if (constraints.maxWidth > 600) {
+              lebar = 500;
+            }
+
+            return Center(
+              child: SizedBox(
+                width: lebar,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 30),
+                    const Spacer(),
+                    Text(
+                      'Login',
+                      style: GoogleFonts.poppins(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    actions: [
-                      ElevatedButton(
+                    const SizedBox(height: 8),
+                    Text(
+                      'You must login into your account to continue',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          _buildTextField(
+                              'E-Mail', Icons.email, _emailController),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                              'Password', Icons.lock, _passwordController,
+                              obscureText: true),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
                         onPressed: () async {
-                          bool savedAddress = await _saveAddress();
-                          if (savedAddress) {
+                          FocusScope.of(context).unfocus();
+                          context.loaderOverlay.show();
+                          final logins = await _loginUser();
+                          if (logins) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              Navigator.pop(context);
+                              context.loaderOverlay.hide();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Utama(),
+                                ),
+                              );
+                            });
+                          } else {
+                            Fluttertoast.showToast(msg: 'Login Failed');
+
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              context.loaderOverlay.hide();
+                              //Fluttertoast.showToast(msg: 'Login Failed');
                             });
                           }
                         },
@@ -116,112 +167,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
-                          child: Text('Save'),
+                          child: Text('Login'),
                         ),
                       ),
-                    ],
-                  );
-                },
-              );
-            },
-            child: Icon(LineIcons.bars),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 30),
-              const Spacer(),
-              Text(
-                'Login',
-                style: GoogleFonts.poppins(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'You must login into your account to continue',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildTextField('E-Mail', Icons.email, _emailController),
+                    ),
                     const SizedBox(height: 16),
-                    _buildTextField('Password', Icons.lock, _passwordController,
-                        obscureText: true),
+                    const Text('or'),
                     const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return RegisterPage();
+                        }));
+                      },
+                      child: const Text(
+                        'Not Registered? Register',
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    const Spacer()
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    FocusScope.of(context).unfocus();
-                    context.loaderOverlay.show();
-                    final logins = await _loginUser();
-                    if (logins) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.loaderOverlay.hide();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Utama(),
-                          ),
-                        );
-                      });
-                    } else {
-                      Fluttertoast.showToast(msg: 'Login Failed');
-
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.loaderOverlay.hide();
-                        //Fluttertoast.showToast(msg: 'Login Failed');
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text('Login'),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text('or'),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return RegisterPage();
-                  }));
-                },
-                child: const Text(
-                  'Not Registered? Register',
-                  style: TextStyle(
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-              const Spacer()
-            ],
-          ),
+            );
+          }),
         ),
       ),
     );
