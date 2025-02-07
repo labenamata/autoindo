@@ -1,6 +1,5 @@
 import 'package:auto_indo/bloc/info_bloc.dart';
 import 'package:auto_indo/model/info.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -18,9 +17,6 @@ Widget balanceWidget() {
         builder: (context, snapshot) {
           var f = NumberFormat("#,###.0#", "en_US");
           if (snapshot.hasData) {
-            if (kDebugMode) {
-              print(snapshot.data!.img!);
-            }
             return UserAccountsDrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.amber,
@@ -30,7 +26,7 @@ Widget balanceWidget() {
                     Text('IDR ${f.format(int.parse(snapshot.data!.balance!))}'),
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: NetworkImage(
-                    snapshot.data!.img!, // Replace with your image URL
+                    snapshot.data!.img ?? '', // Replace with your image URL
                   ),
                   radius: 30,
                 ));
