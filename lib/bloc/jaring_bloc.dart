@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_indo/model/jaring.dart';
+import 'package:auto_indo/model/jarings.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +20,7 @@ class JaringUnitialized extends JaringState {}
 class JaringLoading extends JaringState {}
 
 class JaringLoaded extends JaringState {
-  final Future<List<Jaring>> jaring;
+  final Future<List<Jarings>> jaring;
   JaringLoaded({required this.jaring});
 }
 
@@ -72,25 +73,25 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
   }
 
   Future<void> onJaringAdd(JaringAdd event, Emitter<JaringState> emit) async {
-    Future<List<Jaring>> jaring;
+    Future<List<Jarings>> jaring;
     emit(JaringLoading());
-    await Jaring.tambahJaring(
+    await Jarings.tambahJarings(
         koinId: event.koinId,
         buy: event.buy,
         sell: event.sell,
         modal: event.modal,
         status: event.status);
-    jaring = Jaring.getJaring();
+    jaring = Jarings.getJarings();
     emit(JaringLoaded(jaring: jaring));
   }
 
   Future<void> onJaringBatch(
       JaringBatch event, Emitter<JaringState> emit) async {
-    Future<List<Jaring>> jaring;
+    Future<List<Jarings>> jarings;
     emit(JaringLoading());
-    await Jaring.jaringBatch(jarings: event.data);
-    jaring = Jaring.getJaring();
-    emit(JaringLoaded(jaring: jaring));
+    await Jarings.jaringsBatch(jarings: event.data);
+    jarings = Jarings.getJarings();
+    emit(JaringLoaded(jaring: jarings));
   }
 
   // FutureOr<void> onJaringUpdate(
@@ -103,10 +104,10 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
 
   Future<void> onJaringHapus(
       JaringHapus event, Emitter<JaringState> emit) async {
-    Future<List<Jaring>> jaring;
+    Future<List<Jarings>> jaring;
     emit(JaringLoading());
-    await Jaring.hapusJaring(event.id);
-    jaring = Jaring.getJaring();
+    await Jarings.hapusJarings(event.id);
+    jaring = Jarings.getJarings();
     emit(JaringLoaded(jaring: jaring));
   }
 
@@ -119,9 +120,9 @@ class JaringBloc extends Bloc<JaringEvent, JaringState> {
   // }
 
   FutureOr<void> onJaringGet(JaringGet event, Emitter<JaringState> emit) {
-    Future<List<Jaring>> jaring;
+    Future<List<Jarings>> jaring;
     emit(JaringLoading());
-    jaring = Jaring.getJaring();
+    jaring = Jarings.getJarings();
     emit(JaringLoaded(jaring: jaring));
   }
 }
