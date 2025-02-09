@@ -1,10 +1,12 @@
 import 'package:auto_indo/bloc/bstate_bloc.dart';
 import 'package:auto_indo/bloc/info_bloc.dart';
 import 'package:auto_indo/bloc/jaring_bloc.dart';
+import 'package:auto_indo/bloc/notif_bloc.dart';
 import 'package:auto_indo/bloc/pair_bloc.dart';
 import 'package:auto_indo/constants.dart';
 import 'package:auto_indo/komponen/drawer.dart';
 import 'package:auto_indo/komponen/jaring_widget.dart';
+import 'package:auto_indo/komponen/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -52,6 +54,9 @@ class _UtamaState extends State<Utama> {
 
     BstateBloc bstateBloc = BlocProvider.of<BstateBloc>(context);
     bstateBloc.add(BstateGet());
+
+    NotifBloc notifBloc = BlocProvider.of<NotifBloc>(context);
+    notifBloc.add(NotifGet());
   }
 
   @override
@@ -71,6 +76,12 @@ class _UtamaState extends State<Utama> {
                 'AutoIndo',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Notifications(),
+                )
+              ],
               leading: Container(
                 padding: const EdgeInsets.all(5),
                 child: GestureDetector(
