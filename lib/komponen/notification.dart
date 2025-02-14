@@ -44,7 +44,7 @@ class _NotificationsState extends State<Notifications> {
             return FutureBuilder(
               future: notifLoaded.userNotif,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.hasData && snapshot.data!.count != 0) {
                   notifs = snapshot.data!.notif!;
                   return CircleAvatar(
                     radius: 10,

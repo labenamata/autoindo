@@ -13,6 +13,7 @@ final AuthService _authService = AuthService();
 Widget menuDrawer(BuildContext context) {
   return Drawer(
     backgroundColor: backgroundColor,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     child: Column(
       children: [
         balanceWidget(),
@@ -104,6 +105,10 @@ Widget menuDrawer(BuildContext context) {
               // );
             },
             style: ElevatedButton.styleFrom(
+              minimumSize: Size(30, 50),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              foregroundColor: Colors.white,
               backgroundColor: Colors.amber,
             ),
             child: SizedBox(

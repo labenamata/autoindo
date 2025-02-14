@@ -84,6 +84,11 @@ class _CandleChartState extends State<CandleChart> {
                           },
                         ),
                       ],
+                    ),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(Icons.close),
                     )
                   ],
                 ),

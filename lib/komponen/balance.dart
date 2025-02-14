@@ -3,6 +3,7 @@ import 'package:auto_indo/model/info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:line_icons/line_icons.dart';
 
 Widget balanceWidget() {
   return BlocBuilder<InfoBloc, InfoState>(builder: (context, state) {
@@ -24,12 +25,22 @@ Widget balanceWidget() {
                 accountName: Text(snapshot.data!.name!),
                 accountEmail:
                     Text('IDR ${f.format(int.parse(snapshot.data!.balance!))}'),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    snapshot.data!.img ?? '', // Replace with your image URL
-                  ),
-                  radius: 30,
-                ));
+                currentAccountPicture: snapshot.data!.img != '' &&
+                        snapshot.data?.img != null
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          snapshot.data!.img!, // Replace with your image URL
+                        ),
+                        radius: 30,
+                      )
+                    : CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 30,
+                        child: Icon(
+                          LineIcons.userAstronaut,
+                          size: 30,
+                        ),
+                      ));
           } else {
             return UserAccountsDrawerHeader(
                 decoration: BoxDecoration(
