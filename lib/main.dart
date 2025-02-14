@@ -2,6 +2,7 @@ import 'package:auto_indo/bloc/bstate_bloc.dart';
 import 'package:auto_indo/bloc/info_bloc.dart';
 import 'package:auto_indo/bloc/jaring_bloc.dart';
 import 'package:auto_indo/bloc/notif_bloc.dart';
+import 'package:auto_indo/bloc/ohcl_bloc.dart';
 import 'package:auto_indo/bloc/pair_bloc.dart';
 import 'package:auto_indo/page/login_page.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
                 create: (context) => BstateBloc(BstateUnitialized())),
             BlocProvider<NotifBloc>(
                 create: (context) => NotifBloc(NotifUnitialized())),
+            BlocProvider<OhclBloc>(
+                create: (context) => OhclBloc(OhclUnitialized())),
           ],
           child: GlobalLoaderOverlay(
             duration: Durations.medium4,

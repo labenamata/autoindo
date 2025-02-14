@@ -1,4 +1,6 @@
+import 'package:auto_indo/bloc/ohcl_bloc.dart';
 import 'package:auto_indo/bloc/pair_bloc.dart';
+import 'package:auto_indo/komponen/candle_chart.dart';
 import 'package:auto_indo/model/ketahanan.dart';
 import 'package:auto_indo/model/pair.dart';
 import 'package:auto_indo/model/ticker.dart';
@@ -123,6 +125,7 @@ class _InputFormPageState extends State<InputFormPage> {
                               );
                               setState(() {
                                 _selectedKoin = item.ticker!;
+                                selectedItem = item;
                               });
                             },
                             selectedItem: selectedItem,
@@ -268,24 +271,58 @@ class _InputFormPageState extends State<InputFormPage> {
                       ],
                     ),
                     SizedBox(height: 16),
-                    TextFormField(
-                      controller: _indikatorController,
-                      decoration: InputDecoration(
-                        labelText: 'Indikator',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _indikatorController,
+                            decoration: InputDecoration(
+                              labelText: 'Indikator',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  double.tryParse(value) == null) {
+                                return 'Please enter a valid number';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                      ),
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            double.tryParse(value) == null) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
+                        SizedBox(width: 16),
+                        ElevatedButton(
+                            onPressed: () {
+                              var pair = selectedItem!.name!.toUpperCase() +
+                                  _selectedCurrency;
+                              if (_selectedKoin != '') {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      OhclBloc ohclBloc =
+                                          BlocProvider.of<OhclBloc>(context);
+                                      ohclBloc.add(
+                                          OhclGet(pair: pair, timeFrame: '15'));
+                                      return CandleChart(
+                                        pair: selectedItem!,
+                                      );
+                                    });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(70, 50),
+                              backgroundColor: Colors.greenAccent,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text('Chart'))
+                      ],
                     ),
                     SizedBox(height: 16),
                     TextFormField(

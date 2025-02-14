@@ -1,7 +1,9 @@
 import 'package:auto_indo/bloc/bstate_bloc.dart';
 import 'package:auto_indo/bloc/info_bloc.dart';
 import 'package:auto_indo/bloc/jaring_bloc.dart';
+import 'package:auto_indo/bloc/ohcl_bloc.dart';
 import 'package:auto_indo/constants.dart';
+import 'package:auto_indo/komponen/candle_chart.dart';
 import 'package:auto_indo/komponen/jaring_list.dart';
 import 'package:auto_indo/model/jaring.dart';
 import 'package:auto_indo/model/jarings.dart';
@@ -105,6 +107,9 @@ class JaringWidget extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
                                       title: Text(
                                         'Tambah Jaring',
                                       ),
@@ -252,6 +257,12 @@ class JaringWidget extends StatelessWidget {
 
                                 Future<Ticker> tik;
                                 tik = Ticker.getTicker(koinId: pair.koinId!);
+                                double totalProfit = snapshot
+                                    .data![index].jaring!
+                                    .fold(0, (c, p) {
+                                  double total = c + double.parse(p!.profit!);
+                                  return total;
+                                });
                                 return Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,10 +282,12 @@ class JaringWidget extends StatelessWidget {
                                               width: 50,
                                               height: 50,
                                               image: NetworkImage(pair.image!)),
-                                          Spacer(),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
                                           Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 '${pair.name!}/${pair.curreny?.toUpperCase()}',
@@ -310,7 +323,68 @@ class JaringWidget extends StatelessWidget {
                                                 },
                                               ),
                                             ],
-                                          )
+                                          ),
+                                          Spacer(),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Total Profit',
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                snapshot.data![index].pair!
+                                                            .curreny ==
+                                                        'idr'
+                                                    ? f.format(
+                                                        totalProfit.toInt())
+                                                    : totalProfit.toString(),
+                                                style: TextStyle(
+                                                    color: textBold,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                var pairs = pair.koinId!
+                                                    .replaceAll('_', '');
+
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      OhclBloc ohclBloc =
+                                                          BlocProvider.of<
+                                                                  OhclBloc>(
+                                                              context);
+                                                      ohclBloc.add(OhclGet(
+                                                          pair: pairs,
+                                                          timeFrame: '15'));
+                                                      return CandleChart(
+                                                        pair: pair,
+                                                      );
+                                                    });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                minimumSize: Size(70, 50),
+                                                backgroundColor:
+                                                    Colors.greenAccent,
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              child: Text('Chart'))
                                         ],
                                       ),
                                     ),
